@@ -30,7 +30,7 @@ def mfea(task, config, callback=None):
         factorial_cost[i, sf] = functions[sf](population[i])
     scalar_fitness = calculate_scalar_fitness(factorial_cost)
 
-    task.surrogate_model = Surrogate(len(task.functions), population, skill_factor, factorial_cost, N // 10)
+    task.surrogate_model = Surrogate(len(task.functions), population, skill_factor, factorial_cost)
 
     # sort
     sort_index = np.argsort(scalar_fitness)[::-1]
