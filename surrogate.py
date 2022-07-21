@@ -36,9 +36,9 @@ class Surrogate:
         return self.model[func].predict(x)
 
     def encode(self, ind):
-        return ind
-        # tmp = np.zeros(10)
-        # for i in range(-1, len(ind) - 1):
-        #     tmp[int(self.edge.get((ind[i], ind[i + 1]), 0) / self.sum * 10)] += 1
-        #
-        # return tmp
+        # return ind
+        tmp = np.zeros(10)
+        for i in range(-1, len(ind) - 1):
+            tmp[int(self.edge.get((ind[i], ind[i + 1]), 0) / self.sum * 10)] += 1
+
+        return tmp
