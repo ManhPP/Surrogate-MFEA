@@ -8,14 +8,14 @@ DIRNAME = os.path.dirname(__file__)
 
 class TS_TR:
     def __init__(self, use_surrogate=True):
-        self.path = os.path.join(DIRNAME, 'data/att48.tsp')
+        self.path = os.path.join(DIRNAME, 'data/tsp225.tsp')
         file = open(self.path)
         lines = file.readlines()
         self.functions = [self.tsp, self.trp]
         self.dimension = int(lines[3].strip().split(":")[1])
         self.coord = np.zeros((self.dimension, 2), dtype=int)
         for i in range(self.dimension):
-            self.coord[i] = lines[6 + i].strip().split()[1:]
+            self.coord[i] = [float(_) for _ in lines[6 + i].strip().split()[1:]]
 
         self.distance = cdist(self.coord, self.coord)
         self.surrogate_model = None

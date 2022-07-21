@@ -1,13 +1,16 @@
 import numpy as np
-from sklearn.svm import SVR
+from sklearn.linear_model import BayesianRidge
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import PolynomialFeatures
 
 
 class Surrogate:
     def __init__(self, num_task, pop, skill_factor, factorial_cost):
         self.edge = [{} for _ in range(num_task)]
-        self.model = [SVR() for _ in range(num_task)]
+        self.model = [Pipeline([('poly', PolynomialFeatures(degree=4)),
+                                ('reg', BayesianRidge(fit_intercept=False))]) for _ in range(num_task)]
         self.sum = 0
-        self.update_edge(pop[:len(pop)//10], skill_factor[:len(pop)//10])
+        self.update_edge(pop[:len(pop) // 10], skill_factor[:len(pop) // 10])
 
         for i in range(num_task):
             x = np.array([self.encode(ind, i) for ind in pop[np.where(skill_factor == i)]])
