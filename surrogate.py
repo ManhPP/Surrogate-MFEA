@@ -7,7 +7,7 @@ class Surrogate:
         self.edge = [{} for _ in range(num_task)]
         self.model = [SVR() for _ in range(num_task)]
         self.sum = 0
-        self.update_edge(pop, skill_factor)
+        self.update_edge(pop[:len(pop)//10], skill_factor[:len(pop)//10])
 
         for i in range(num_task):
             x = np.array([self.encode(ind, i) for ind in pop[np.where(skill_factor == i)]])

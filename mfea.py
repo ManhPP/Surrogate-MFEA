@@ -14,6 +14,7 @@ def mfea(task, config, callback=None):
     D = task.dimension
     T = config['num_iter']
     rmp = config['rmp']
+    use_surrogate = config['use_surrogate']
 
     # initialize
     population = np.zeros((2 * N, D), dtype=int)
@@ -31,7 +32,7 @@ def mfea(task, config, callback=None):
     scalar_fitness = calculate_scalar_fitness(factorial_cost)
 
     task.surrogate_model = Surrogate(len(task.functions), population, skill_factor, factorial_cost)
-
+    task.use_surrogate = use_surrogate
     # sort
     sort_index = np.argsort(scalar_fitness)[::-1]
     population = population[sort_index]
@@ -102,7 +103,7 @@ def mfea(task, config, callback=None):
         task.surrogate_model.update(population[:N // 10], skill_factor[:N // 10], real_factorial_cost)
 
         # optimization info
-        message = {'algorithm': 'mfea', 'rmp': rmp}
+        message = {'algorithm': 'mfea', 'rmp': rmp, "use_surrogate": use_surrogate}
         results = get_optimization_results(t, population, factorial_cost, scalar_fitness, skill_factor, message)
         if callback:
             callback(results)
