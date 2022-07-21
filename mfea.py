@@ -99,12 +99,16 @@ def mfea(task, config, callback=None):
         c1 = population[np.where(skill_factor == 0)][0]
         c2 = population[np.where(skill_factor == 1)][0]
 
-        real_factorial_cost = np.array([functions[skill_factor[i]](population[i], False) for i in range(N // 10)])
+        real_factorial_cost = np.array([[func(population[i], False) for func in functions] for i in range(N // 10)])
         task.surrogate_model.update(population[:N // 10], skill_factor[:N // 10], real_factorial_cost)
 
         # optimization info
         message = {'algorithm': 'mfea', 'rmp': rmp, "use_surrogate": use_surrogate}
-        results = get_optimization_results(t, population, factorial_cost, scalar_fitness, skill_factor, message)
+        results = get_optimization_results(t, population[:N // 10],
+                                           real_factorial_cost,
+                                           scalar_fitness[:N // 10],
+                                           skill_factor[:N // 10],
+                                           message)
         if callback:
             callback(results)
 

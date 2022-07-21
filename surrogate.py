@@ -20,7 +20,7 @@ class Surrogate:
     def update(self, pop, skill_factor, real_factorial_cost):
         for i, model in enumerate(self.model):
             x = np.array([self.encode(ind, i) for ind in pop[np.where(skill_factor == i)]])
-            y = np.array([val for val in real_factorial_cost[np.where(skill_factor == i)]])
+            y = np.array([val[i] for val in real_factorial_cost[np.where(skill_factor == i)]])
             model.fit(x, y)
 
         self.update_edge(pop, skill_factor)
