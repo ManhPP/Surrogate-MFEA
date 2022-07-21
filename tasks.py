@@ -8,7 +8,7 @@ DIRNAME = os.path.dirname(__file__)
 
 class TS_TR:
     def __init__(self, use_surrogate=True):
-        self.path = os.path.join(DIRNAME, 'data/att48.tsp')
+        self.path = os.path.join(DIRNAME, 'data/berlin52.tsp')
         file = open(self.path)
         lines = file.readlines()
         self.functions = [self.tsp, self.trp]
