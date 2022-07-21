@@ -1,5 +1,5 @@
 import yaml
-from .operators import get_best_individual
+from operators import get_best_individual
 from scipy.optimize import OptimizeResult
 from yaml import Loader
 

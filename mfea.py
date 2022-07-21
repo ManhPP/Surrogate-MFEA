@@ -1,3 +1,9 @@
+from tqdm import trange
+
+from helpers import *
+from operators import *
+from surrogate import Surrogate
+
 config = load_config()
 
 
@@ -23,6 +29,8 @@ def mfea(task, config, callback=None):
         sf = skill_factor[i]
         factorial_cost[i, sf] = functions[sf](population[i])
     scalar_fitness = calculate_scalar_fitness(factorial_cost)
+
+    task.surrogate_model = Surrogate(len(task.functions), population, skill_factor, factorial_cost, N // 10)
 
     # sort
     sort_index = np.argsort(scalar_fitness)[::-1]
@@ -90,11 +98,15 @@ def mfea(task, config, callback=None):
         c1 = population[np.where(skill_factor == 0)][0]
         c2 = population[np.where(skill_factor == 1)][0]
 
+        real_factorial_cost = np.array([functions[skill_factor[i]](population[i], False) for i in range(N // 10)])
+        task.surrogate_model.update(population[:N // 10], skill_factor[:N // 10], real_factorial_cost)
+
         # optimization info
         message = {'algorithm': 'mfea', 'rmp': rmp}
         results = get_optimization_results(t, population, factorial_cost, scalar_fitness, skill_factor, message)
         if callback:
             callback(results)
 
-        desc = 'gen:{} fitness:{} message:{}'.format(t, ' '.join('{:0.6f}'.format(res.fun) for res in results), message)
+        desc = 'gen:{} factorial_cost:{} message:{}'.format(t, ' '.join('{:0.6f}'.format(res.fun) for res in results),
+                                                            message)
         iterator.set_description(desc)
